@@ -21,11 +21,10 @@ def get_one_zero_random_numpy_matrix(num_of_rows, num_of_cols, num_of_zeros):
     return (mask)
 
 # function to reset random links (set to zero)
-def reset_links(weights, what_fraction_to_reset):
+def reset_links(weights, num_of_links_to_reset):
     num_of_rows = weights.shape[0]
     num_of_cols = weights.shape[1]
     total_links = int(num_of_rows * num_of_cols)
-    num_of_links_to_reset = int(total_links * what_fraction_to_reset)
     mask = get_one_zero_random_numpy_matrix(num_of_rows, num_of_cols, num_of_links_to_reset)
     return (weights * mask)
 
@@ -118,17 +117,17 @@ test_accuracy = sum(test_predictions.obs == test_predictions.pred) / float(test_
 print "Training Accuracy: " + str(training_accuracy)
 print "Test Accuracy: " + str(test_accuracy)
 
-# try out for various reset_percent values:
+# try out for various failed neuron values:
 original_weights_input_to_hidden = sess.run(weights_input_to_hidden)
 original_weights_hidden_to_output = sess.run(weights_hidden_to_output)
-for reset_percent in [0.01, 0.02, 0.03, 0.05, 0.1, 0.15]:
+for failed_links in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]:
 
     # print failure status
-    print ("\n\nFailure of " + str(int(reset_percent*100)) + "% of links....")
+    print ("\n\nFailure of " + str(2*failed_links) + " network links....")
 
     # reset some links randomly
-    sess.run(weights_input_to_hidden.assign(reset_links(original_weights_input_to_hidden, reset_percent)))
-    sess.run(weights_hidden_to_output.assign(reset_links(original_weights_hidden_to_output, reset_percent)))
+    sess.run(weights_input_to_hidden.assign(reset_links(original_weights_input_to_hidden, failed_links)))
+    sess.run(weights_hidden_to_output.assign(reset_links(original_weights_hidden_to_output, failed_links)))
 
     # print training and test accuracies
     #training_predictions = predictions(X_train, y_train)
